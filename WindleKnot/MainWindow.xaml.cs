@@ -28,18 +28,21 @@ namespace WindleKnot
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            byte[] compressedData = new byte[]
-            {
-                 0x20, 0x90, 0x88, 0x38, 0x1C, 0x21, 0xE2, 0x5C, 0x15, 0x80
-            };
+            byte[] uncompressedData = new byte[]
+                 {0x41, 0x42, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x43, 0x41, 0x42, 0x41, 0x42, 0x41, 0x42, 0x41};
 
-            uint dataLen = (uint)compressedData.Length;
+
+            uint unCompressedDataLen = (uint)uncompressedData.Length;
             uint expectedSize = 16;
             uint outSize;
 
             LZS lzs = new LZS();
 
-            byte[] decompressedData = lzs.Decompress(compressedData, dataLen, expectedSize, out outSize);
+            byte[] CompressedData = lzs.Compress(uncompressedData, unCompressedDataLen, false, out outSize);
+
+            uint compressedDataLen = (uint)CompressedData.Length;
+
+            byte[] LZSdecompressedDataTest = lzs.Decompress(CompressedData, compressedDataLen, expectedSize, out outSize);
             // Expected result: 0x41 0x42 0x41 0x41 0x41 0x41 0x41 0x41 0x43 0x41 0x42 0x41 0x42 0x41 0x42 0x41
             // Result: Success
         }
