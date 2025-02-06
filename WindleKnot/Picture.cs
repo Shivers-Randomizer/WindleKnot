@@ -18,11 +18,12 @@ namespace WindleKnot
         
         }
 
-        
+
+        LZS lzs = new LZS();
 
         public BitmapImage DrawPicture(byte[] resourceData, ResourceMap resourceMap, int imageIndex)
         {
-            LZS lzs = new LZS();
+            
 
             uint compressedSize = BitConverter.ToUInt32(resourceData, (int)resourceMap.pictureMap[0].Item2 + 3);
             uint uncompressedSize = BitConverter.ToUInt32(resourceData, (int)resourceMap.pictureMap[0].Item2 + 7);

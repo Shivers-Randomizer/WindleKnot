@@ -65,7 +65,8 @@ namespace WindleKnot
                 Picture picture = new Picture();
 
                 //Change third parameter to what ever image index you want.
-                CanvasPicture.Source = picture.DrawPicture(resourceData, resourceMap, 22);
+                //CanvasPicture.Source = picture.DrawPicture(resourceData, resourceMap, 22);
+                CanvasPicture.Source = picture.DrawPicture(resourceData, resourceMap, 20);
             }
         }
 
