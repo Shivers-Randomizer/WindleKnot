@@ -12,21 +12,17 @@ namespace WindleKnot
 {
     internal class Picture
     {
-
         public Picture() 
         { 
         
         }
 
-
         LZS lzs = new LZS();
 
         public BitmapImage DrawPicture(byte[] resourceData, ResourceMap resourceMap, int imageIndex)
         {
-            
-
-            uint compressedSize = BitConverter.ToUInt32(resourceData, (int)resourceMap.pictureMap[0].Item2 + 3);
-            uint uncompressedSize = BitConverter.ToUInt32(resourceData, (int)resourceMap.pictureMap[0].Item2 + 7);
+            uint compressedSize = BitConverter.ToUInt32(resourceData, (int)resourceMap.pictureMap[imageIndex].Item2 + 3);
+            uint uncompressedSize = BitConverter.ToUInt32(resourceData, (int)resourceMap.pictureMap[imageIndex].Item2 + 7);
             uint outSize;
             byte[] CompressedData = new byte[compressedSize];
             Array.Copy(resourceData, resourceMap.pictureMap[imageIndex].Item2 + 0x0D, CompressedData, 0, compressedSize);
@@ -62,11 +58,9 @@ namespace WindleKnot
                     }
                 }
 
-
                 BitmapImage bitmapImage = ConvertBitmapToBitmapImage(bitmap);
+                
                 return bitmapImage;
-
-
             }
         }
 
