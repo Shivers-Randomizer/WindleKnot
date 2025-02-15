@@ -100,7 +100,6 @@ namespace WindleKnot
             if (data[0x5E] == 0)
             {
                 PALETTE_ITEM_SIZE = 4;
-                PALETTE_OFFSET = 0x64;
             }
 
             // Extract palette data
@@ -108,16 +107,19 @@ namespace WindleKnot
             for (int i = PALETTE_OFFSET; i < offset + HEADER_LENGTHS; i += PALETTE_ITEM_SIZE)
             {
                 byte a = 1;
-
-                //Check if alpha ARGB format
-                if (PALETTE_ITEM_SIZE == 4)
-                {
-                    a = data[i - 1];
-                }
-
                 byte r = data[i];
                 byte g = data[i + 1];
                 byte b = data[i + 2];
+
+                //Check if using ARGB format
+                if (PALETTE_ITEM_SIZE == 4)
+                {
+                    a = data[i];
+                    r = data[i + 1];
+                    g = data[i + 2];
+                    b = data[i + 3];
+                }
+
                 palette.Add((a, r, g, b));
             }
 
