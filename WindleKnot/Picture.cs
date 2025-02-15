@@ -54,7 +54,7 @@ namespace WindleKnot
 
 
                         // Set the pixel color
-                        bitmap.SetPixel(col, row, System.Drawing.Color.FromArgb(r, g, b));
+                        bitmap.SetPixel(col, row, Color.FromArgb(a * 255, r, g, b));
                     }
                 }
 
@@ -68,7 +68,7 @@ namespace WindleKnot
         {
             using (MemoryStream memoryStream = new MemoryStream())
             {
-                // Save the System.Drawing.Bitmap to the memory stream in PNG format
+                // Save the Bitmap to the memory stream in PNG format
                 bitmap.Save(memoryStream, ImageFormat.Png);
                 memoryStream.Position = 0;
 
