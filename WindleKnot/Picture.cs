@@ -12,9 +12,9 @@ namespace WindleKnot
 {
     internal class Picture
     {
-        public Picture() 
-        { 
-        
+        public Picture()
+        {
+
         }
 
         LZS lzs = new LZS();
@@ -29,12 +29,12 @@ namespace WindleKnot
 
             byte[] uncompressedData = lzs.Decompress(CompressedData, compressedSize, uncompressedSize, out outSize);
 
-            (byte[][] matrixData, List<(byte R, byte G, byte B)> palette) = GetImageDataWithPalette(uncompressedData);
+            (byte[][] matrixData, List<(byte A, byte R, byte G, byte B)> palette) = GetImageDataWithPalette(uncompressedData);
 
             return ConstructBitmapImage(matrixData, palette);
         }
 
-        public static BitmapImage ConstructBitmapImage(byte[][] matrixData, List<(byte R, byte G, byte B)> palette)
+        public static BitmapImage ConstructBitmapImage(byte[][] matrixData, List<(byte A, byte R, byte G, byte B)> palette)
         {
             int height = matrixData.Length;
             int width = matrixData[0].Length;
@@ -50,7 +50,7 @@ namespace WindleKnot
                         byte paletteIndex = matrixData[row][col];
 
                         // Get the RGB color from the palette
-                        var (r, g, b) = palette[paletteIndex];
+                        var (a, r, g, b) = palette[paletteIndex];
 
 
                         // Set the pixel color
@@ -59,7 +59,7 @@ namespace WindleKnot
                 }
 
                 BitmapImage bitmapImage = ConvertBitmapToBitmapImage(bitmap);
-                
+
                 return bitmapImage;
             }
         }
@@ -85,7 +85,7 @@ namespace WindleKnot
 
 
 
-        static (byte[][], List<(byte R, byte G, byte B)>) GetImageDataWithPalette(byte[] data)
+        static (byte[][], List<(byte A, byte R, byte G, byte B)>) GetImageDataWithPalette(byte[] data)
         {
             // Constants and header parsing
             int HEADER_LENGTHS = 0x44;
@@ -96,14 +96,29 @@ namespace WindleKnot
             int width = BitConverter.ToInt16(data, 0x0E); // Image width
             int height = BitConverter.ToInt16(data, 0x10); // Image height
 
+            //Determine if using RGB or ARGB Format
+            if (data[0x5E] == 0)
+            {
+                PALETTE_ITEM_SIZE = 4;
+                PALETTE_OFFSET = 0x64;
+            }
+
             // Extract palette data
-            var palette = new List<(byte R, byte G, byte B)>();
+            var palette = new List<(byte A, byte R, byte G, byte B)>();
             for (int i = PALETTE_OFFSET; i < offset + HEADER_LENGTHS; i += PALETTE_ITEM_SIZE)
             {
+                byte a = 1;
+
+                //Check if alpha ARGB format
+                if (PALETTE_ITEM_SIZE == 4)
+                {
+                    a = data[i - 1];
+                }
+
                 byte r = data[i];
                 byte g = data[i + 1];
                 byte b = data[i + 2];
-                palette.Add((r, g, b));
+                palette.Add((a, r, g, b));
             }
 
             // Extract the image data
